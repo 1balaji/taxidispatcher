@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+
+<!-- ========================= RESOURCE DEFINITIONS ========================= -->
+
+	<!-- Configurer that replaces ${...} placeholders with values from a properties file -->
+	<!-- (in this case, JDBC-related settings for the dataSource definition below) -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+
+	<!--
+		Uses Apache Commons DBCP for connection pooling. See Commons DBCP documentation
+		for the required JAR files. See the PetStore sample application also shipped with
+		Spring, for an example of Commons DBCP usage and the necessary build script.
+		Alternatively you can use another connection pool such as C3P0, similarly configured
+		using Spring.
+		A standalone connection pool such as Commons DBCP is a good choice for use outside an
+		application server environment, including web applications running in a web container without
+		JTA, or integration testing using the org.springframework.test package.
+	-->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:driverClassName="${jdbc.driverClassName}" p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"/>
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+      <property name="dataSource" ref="dataSource" />
+      <property name="packagesToScan" value="com.taxidispatcher.model" />
+      <property name="hibernateProperties">
+          <props>
+              <prop key="dialect">org.hibernate.dialect.MySQLDialect</prop>
+          </props>
+      </property>
+   </bean>
+
+	
+	<!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+			p:sessionFactory-ref="sessionFactory"/>
+	
+
+
+	<!-- ========================= BUSINESS OBJECT DEFINITIONS ========================= -->
+
+	<!--
+		Instruct Spring to retrieve and apply @AspectJ aspects which are defined
+		as beans in this context (such as the CallMonitoringAspect below).
+	-->
+<!-- 	<aop:aspectj-autoproxy/> -->
+	
+
+	   
+	
+	<!-- ========================= Database Bean DEFINITIONS ========================= -->
+	
+	<!-- DAO bean definitions. -->
+	<bean id="zoneDao" class="com.taxidispatcher.dao.ZoneDaoImpl">
+	    <property name="sessionFactory">
+	        <ref bean="sessionFactory"/>    
+	    </property>
+	</bean>
+	
+	<bean id="taxiZoneDao" class="com.taxidispatcher.dao.TaxiZoneDaoImpl">
+	    <property name="sessionFactory">
+	        <ref bean="sessionFactory"/>    
+	    </property>
+	</bean>
+	
+	<bean id="jobDao" class="com.taxidispatcher.dao.JobDaoImpl">
+	    <property name="sessionFactory">
+	        <ref bean="sessionFactory"/>    
+	    </property>
+	</bean>
+	
+	
+
+</beans>

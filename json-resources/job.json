@@ -1,0 +1,71 @@
+{
+  "Job": {
+    "-jobId": "12345",
+    "-jobType": "ROUND_TRIP",
+    "RoundTrip": "N",
+    "PickUp": {
+      "PickUpZone": "ZONE-104",
+      "PickUpAddress": {
+        "Address1": "123, 54th street",
+        "Address2": "14th Floor",
+        "City": "Kathmandu",
+        "Zip": "12345",
+        "Notes": "Between kalimati road and jalpa rd."
+      },
+      "PickUpTime": "2012-01-01 10:30:00",
+      "NumberOfPassengers": "3"
+    },
+    "Stops": {
+      "Stop": [
+        {
+          "-StopSeq": "1",
+          "StopAddress": {
+            "Address1": "123, 54th street",
+            "Address2": "14th Floor",
+            "City": "Kathmandu",
+            "Zip": "12345",
+            "Notes": "Between kalimati road and jalpa rd."
+          }
+        },
+        {
+          "-StopSeq": "2",
+          "StopAddress": {
+            "Address1": "123, 54th street",
+            "Address2": "14th Floor",
+            "City": "Kathmandu",
+            "Zip": "12345",
+            "Notes": "Between kalimati road and jalpa rd."
+          }
+        }
+      ]
+    },
+    "JobNotes": "Don't ask for credit cards.",
+    "DropOff": {
+      "DropOffZone": "ZONE-104",
+      "DroppedOffTime": "2012-01-01 03:30:00",
+      "DropOffAddress": {
+        "Address1": "123, 54th street",
+        "Address2": "14th Floor",
+        "City": "Kathmandu",
+        "Zip": "12345",
+        "Notes": "Between kalimati road and jalpa rd."
+      }
+    },
+    "Customer": {
+      "Name": "Sanjeev Ghimire",
+      "CustomerCategory": "HIGH_CLASS"
+    },
+    "Taxi": {
+      "TaxiCode": "NTS-3215",
+      "TaxiType": "non-smoking",
+      "DeviceId": "AND-3251"
+    },
+    "TotalPrice": "145",
+    "PaymentMethod": "Credit Card/Vouchers",
+    "JobStatusLog": {
+      "JobAccepted": "2012-01-01 03:30:00",
+      "CustomerLoad": "2012-01-01 03:30:00",
+      "CustomerUnload": "2012-01-01 03:30:00"
+    }
+  }
+}

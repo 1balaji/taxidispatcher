@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Job jobId="12345" jobType="ROUND_TRIP">
+	<RoundTrip>N</RoundTrip>
+	<PickUp>
+		<PickUpZone>ZONE-104</PickUpZone>
+		<PickUpAddress>
+			<Address1>123, 54th street</Address1>
+			<Address2>14th Floor</Address2>
+			<City>Kathmandu</City>
+			<Zip>12345</Zip>
+			<Notes>Between kalimati road and jalpa rd.</Notes>
+		</PickUpAddress>
+		<PickUpTime>2012-01-01 10:30:00</PickUpTime>
+		<NumberOfPassengers>3</NumberOfPassengers>
+	</PickUp>
+	<Stops>
+		<Stop StopSeq="1">
+			<StopAddress>
+				<Address1>123, 54th street</Address1>
+				<Address2>14th Floor</Address2>
+				<City>Kathmandu</City>
+				<Zip>12345</Zip>
+				<Notes>Between kalimati road and jalpa rd.</Notes>
+			</StopAddress>
+		</Stop>
+		<Stop StopSeq="2">
+			<StopAddress>
+				<Address1>123, 54th street</Address1>
+				<Address2>14th Floor</Address2>
+				<City>Kathmandu</City>
+				<Zip>12345</Zip>
+				<Notes>Between kalimati road and jalpa rd.</Notes>
+			</StopAddress>
+		</Stop>
+	</Stops>	
+	<JobNotes>Don't ask for credit cards.</JobNotes>
+	<DropOff>
+		<DropOffZone>ZONE-104</DropOffZone>
+		<DroppedOffTime>2012-01-01 03:30:00</DroppedOffTime>
+		<DropOffAddress>
+			<Address1>123, 54th street</Address1>
+			<Address2>14th Floor</Address2>
+			<City>Kathmandu</City>
+			<Zip>12345</Zip>
+			<Notes>Between kalimati road and jalpa rd.</Notes>
+		</DropOffAddress>
+	</DropOff>
+	<Customer>
+		<Name>Sanjeev Ghimire</Name>
+		<CustomerCategory>HIGH_CLASS</CustomerCategory>
+	</Customer>
+	<Taxi>
+		<TaxiCode>NTS-3215</TaxiCode>
+		<TaxiType>non-smoking</TaxiType>
+		<DeviceId>AND-3251</DeviceId>
+	</Taxi>
+	<TotalPrice>145</TotalPrice>
+	<PaymentMethod>Credit Card/Vouchers</PaymentMethod>
+	<JobStatusLog>
+		<JobAccepted>2012-01-01 03:30:00</JobAccepted>
+		<CustomerLoad>2012-01-01 03:30:00</CustomerLoad>
+		<CustomerUnload>2012-01-01 03:30:00</CustomerUnload>
+	</JobStatusLog>
+</Job>

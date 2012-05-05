@@ -1,0 +1,180 @@
+<project name="taxidispatcher" default="init" basedir=".">
+	
+    <property file="build.properties"/>
+<!-- Configure the context path for this application -->
+    <property name="path" value="/taxi-dispatcher"/>
+	
+    <path id="project.class.path.global">
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>	
+    </path>
+
+		
+    <target name="init" description="initialization target which sets up properties for other targets">
+    	
+        <property name="build.dir" value="build"/>
+        <property name="dist.dir" value="dist"/>
+        <property name="src.dir" value="src"/>
+        <property name="lib.dir" value="lib"/>
+        <property name="web.dir" value="web"/>
+        <property name="src.tests" value="test"/>  
+    	<property name="name" value="taxi-dispatcher"/>
+
+    	
+    	<!-- Configure properties to access the Manager application. In order for the tomcat targets to 
+    	     work you need to add this entry to the to the $TOMCAT_HOME/conf/tomcat-users.xml
+    	     <user username="admin" password="d3c7ph3r" roles="manager-gui,manager-script,manager-jmx,manager-status"/> 
+    	
+        <property name="url"      value="http://localhost:8080/manager"/>
+        <property name="username" value="admin"/>
+        <property name="password" value="d3c7ph3r"/>-->
+	
+        <path id="project.class.path">
+            <fileset dir="${lib.dir}">
+                <include name="**/*.jar"/>
+            </fileset>	
+        </path>
+    </target>
+	
+    <target name="create.dir" depends="clean,init" description="creates the build directory DEPENDS ON init">
+        <echo message="[init] ========== Running init ============"/>
+        <echo message="dist.dir=${dist.dir}"/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/classes"/>
+        <mkdir dir="${dist.dir}"/>                
+    </target>
+	
+    <target name="clean" description="delete the build directory.">
+        <echo message="[init] ========== Running clean ============"/>
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+	
+    <target name="compile" depends="create.dir" description="compiles all source files into the build directory DEPENDS ON init,create.dir" >
+        <javac srcdir="${src.dir}"
+               destdir="${build.dir}/classes"
+        	   debug="true"
+        	   debuglevel="lines,vars,source"
+        	   verbose="false">
+            <classpath refid="project.class.path"/>
+        </javac>
+    </target>
+	
+    <target name="create.war" depends="compile" description="creates the commerce war file and places the war into the dist directory DEPENDS ON compile">	
+                <echo message="dist.dir=${dist.dir}"/>
+            <war destfile="${dist.dir}/${name}.war" webxml="${web.dir}/WEB-INF/web.xml" >
+            <fileset dir="${web.dir}"/>            
+            <classes dir="${build.dir}/classes" excludes="**/*Test.class"/> 
+            <lib dir="${lib.dir}" 
+				excludes="servlet-api.jar,catalina-ant.jar,tomcat-dbcp.jar"/>
+        </war>
+    </target>
+
+
+	
+	
+    <target name="build.start" depends="deploy.commerce">
+ 	
+    </target>
+	
+    <target name="build.stop" depends="undeploy.commerce">
+	 	
+    </target>
+	
+    <target name="run.tests" depends="init,compile" description="runs unit tests">
+		<!--
+		<junit printsummary="yes" haltonfailure="yes">
+		  <classpath>
+		    <pathelement location="${build.dir}/classes"/>
+		    <fileset dir="${lib.dir}">
+		    	<include name="**/*.jar"/>
+		    </fileset>
+		  </classpath>
+		<formatter type="plain" usefile="false" />
+		  <batchtest fork="yes" todir="${reports.tests}">
+		    <fileset dir="${src.tests}">
+		      <include name="**/*Test.java"/>
+		    </fileset>
+		  </batchtest>
+		</junit>
+		-->
+    </target>
+	
+    <!-- Configure the custom Ant tasks for the Manager application. Make sure 
+		 the catalina-adn.jar files are in the tomcat/lib directory and also 
+		 in the $ANT_HOME/lib directory otheriwse the targest will fail.    
+     -->
+    <taskdef name="deploy"    classname="org.apache.catalina.ant.DeployTask">         
+        <classpath refid="project.class.path.global"></classpath>
+    </taskdef>
+    
+    <taskdef name="list"      classname="org.apache.catalina.ant.ListTask">
+        <classpath refid="project.class.path.global"></classpath>
+    </taskdef>
+    
+    <taskdef name="reload"    classname="org.apache.catalina.ant.ReloadTask">
+        <classpath refid="project.class.path.global"></classpath>
+    </taskdef> 
+    
+    <taskdef name="resources" classname="org.apache.catalina.ant.ResourcesTask">
+        <classpath refid="project.class.path.global"></classpath>
+    </taskdef>
+    
+    <taskdef name="roles"     classname="org.apache.catalina.ant.RolesTask">
+        <classpath refid="project.class.path.global"></classpath>
+    </taskdef>
+    
+    <taskdef name="start"     classname="org.apache.catalina.ant.StartTask">
+        <classpath refid="project.class.path.global"></classpath>
+    </taskdef>
+    
+    <taskdef name="stop"      classname="org.apache.catalina.ant.StopTask">
+        <classpath refid="project.class.path.global"></classpath>
+    </taskdef>
+    
+    <taskdef name="undeploy"  classname="org.apache.catalina.ant.UndeployTask">
+        <classpath refid="project.class.path.global"></classpath>
+    </taskdef>	
+	
+   <!-- List of all the available tomcat tasks -->	
+    <target name="deploy.commerce" depends="create.war" description="deploy the commerce web application DEPENDS ON create.war">
+                <echo message="dist.dir=${dist.dir}"/>
+
+        <deploy url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}"
+	            path="${path}" war="${dist.dir}/${name}.war"/>
+    </target>
+
+    <target name="reload.commerce" depends="create.war" description="reload the commerce web application DEPENDS ON create.war">
+        <reload  url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}"
+	             path="${path}"/>
+    </target>
+
+    <target name="undeploy.commerce" depends="init" description="removes the commerce web application DEPENDS ON init">
+        <undeploy url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}"
+          path="${path}"/>
+    </target>
+	
+    <target name="start.commerce" depends="init" description="start commerce application DEPENDS ON init">
+        <start url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" 
+       	path="${path}"/> 
+    </target>
+
+    <target name="stop.commerce" depends="init" description="stop commerce application DEPENDS ON init">
+        <stop url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" 
+        path="${path}"/> 
+    </target>
+	
+    <target name="list.all.tomcat.apps" depends="init" description="list all tomcat applicaitons installed DEPENDS ON init">
+        <list url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" />	
+    </target>
+	
+    <target name="resources" depends="init" description="list all resources loaded onto the tomcat server DEPENDS ON init">
+        <resources url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}"/>
+    </target>
+	
+    <target name="list.all.tomcat.roles" depends="init" description="list all tomcat roles DEPENDS ON init">
+        <roles url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}"/>
+    </target>
+
+</project>
